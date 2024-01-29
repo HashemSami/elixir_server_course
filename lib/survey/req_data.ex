@@ -8,7 +8,7 @@ defmodule Survey.ReqData do
             status: nil,
             params: %{},
             headers: %{},
-            resp_content_type: "text/html",
+            resp_headers: %{"Content-Type" => "text/html", "Content-Length" => "0"},
             resp_body: ""
 
   def full_status(req_data) do

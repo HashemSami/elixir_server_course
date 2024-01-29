@@ -8,9 +8,9 @@ defmodule Survey.Parser do
 
     [request_line | header_lines] = String.split(top, "\r\r\n")
 
-    headers = parse_headers(header_lines)
     # get the header parts from the request_line
     [method, path, _version] = String.split(request_line, " ")
+    headers = parse_headers(header_lines)
 
     %ReqData{
       method: method,
@@ -41,6 +41,10 @@ defmodule Survey.Parser do
     params_string
     |> String.trim()
     |> URI.decode_query()
+  end
+
+  def parse_params("application/json", params_string) do
+    Poison.Parser.parse!(params_string, %{})
   end
 
   def parse_params(_, _), do: %{}

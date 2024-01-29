@@ -1,4 +1,5 @@
 defmodule Survey.FileHandler do
+  alias Survey.ReqData
   @pages_path Path.expand("../../pages", __DIR__)
 
   # or this line, CWD is always returning the root directory
@@ -12,6 +13,18 @@ defmodule Survey.FileHandler do
     |> Path.join("#{page}.html")
     |> File.read()
     |> handle_file(req_data)
+  end
+
+  def serve_md_page(req_data, page) do
+    @pages_path
+    |> Path.join("#{page}.md")
+    |> File.read()
+    |> handle_file(req_data)
+    |> parse_md_to_html
+  end
+
+  def parse_md_to_html(%ReqData{status: 200} = req_data) do
+    %{req_data | resp_body: Earmark.as_html!(req_data.resp_body)}
   end
 
   # ======================

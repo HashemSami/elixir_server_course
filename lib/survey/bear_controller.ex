@@ -37,7 +37,7 @@ defmodule Survey.BearController do
     %{
       req_data
       | status: 201,
-        resp_body: "Crated a #{type} bear named #{name}"
+        resp_body: "Created a #{type} bear named #{name}!"
     }
   end
 
