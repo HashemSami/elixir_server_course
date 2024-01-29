@@ -94,7 +94,7 @@ defmodule Survey.Handler do
     """
     HTTP/1.1 #{ReqData.full_status(req_data)}\r
     #{format_response_headers(resp_headers)}
-    \r
+    \r\n\r
     #{req_data.resp_body}
     """
   end

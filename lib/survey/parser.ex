@@ -4,9 +4,9 @@ defmodule Survey.Parser do
 
   def parse(req_data) do
     # this will return a list with tow element
-    [top, params_string] = String.split(req_data, "\r\r\n\r\r\n")
+    [top, params_string] = String.split(req_data, "\r\n\r\n")
 
-    [request_line | header_lines] = String.split(top, "\r\r\n")
+    [request_line | header_lines] = String.split(top, "\r\n")
 
     # get the header parts from the request_line
     [method, path, _version] = String.split(request_line, " ")

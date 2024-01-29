@@ -58,7 +58,7 @@ GET /faq HTTP/1.1\r
 Host: example.com\r
 User-Agent: ExampleBrowser/1.0\r
 Accept: */*\r
-\r
+\r\n\r
 """
 
 # req_data = """
