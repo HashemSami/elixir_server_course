@@ -4,6 +4,8 @@ defmodule Survey.Handler do
   """
   alias Survey.ReqData
   alias Survey.BearController
+  alias Survey.VideoCam
+  alias Survey.Fetcher
 
   import Survey.Plugins, only: [rewrite_path: 1, track: 1, log: 1]
   import Survey.FileHandler, only: [serve_page: 2, serve_md_page: 2]
@@ -26,6 +28,27 @@ defmodule Survey.Handler do
   end
 
   # ======================
+
+  def route(%ReqData{method: "GET", path: "/snapshots"} = req_data) do
+    snapshots =
+      ["cam-1", "cam-2", "cam-3"]
+      # this will return 3 pids after running all processes
+      |> Enum.map(&Task.async(fn -> VideoCam.get_snapshot(&1) end))
+      # then will receive the messages through this pipe
+      |> Enum.map(&Task.await/1)
+
+    %{req_data | status: 200, resp_body: inspect(snapshots)}
+  end
+
+  def route(%ReqData{method: "GET", path: "/kaboom"}) do
+    raise "Kaboom!"
+  end
+
+  def route(%ReqData{method: "GET", path: "/hibernate/" <> time} = req_data) do
+    time |> String.to_integer() |> :timer.sleep()
+    %{req_data | status: 200, resp_body: "Awake!!"}
+  end
+
   def route(%ReqData{method: "GET", path: "/wildthings"} = req_data) do
     # Map.put(req_data, :resp_body, "Bears, Lions, Tigers")
     # same as
@@ -96,6 +119,7 @@ defmodule Survey.Handler do
     #{format_response_headers(resp_headers)}
     \r\n\r
     #{req_data.resp_body}
+
     """
   end
 end

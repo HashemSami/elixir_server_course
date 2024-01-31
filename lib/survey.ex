@@ -53,13 +53,17 @@ end
 
 # trying get requests
 
-req_data = """
-GET /faq HTTP/1.1\r
-Host: example.com\r
-User-Agent: ExampleBrowser/1.0\r
-Accept: */*\r
-\r\n\r
-"""
+# req_data = """
+# GET /faq HTTP/1.1\r
+# Host: example.com\r
+# User-Agent: ExampleBrowser/1.0\r
+# Accept: */*\r
+# \r\n\r
+# """
+
+# spawn(fn -> Survey.HttpServer.start(4000) end)
+
+# IO.puts(Survey.Client.send(req_data, 4000))
 
 # req_data = """
 # POST /api/bears HTTP/1.1\r
@@ -72,7 +76,7 @@ Accept: */*\r
 # {"name": "Breezly", "type": "Polar"}
 # """
 
-IO.puts(Survey.Handler.handle(req_data))
+# IO.puts(Survey.Handler.handle(req_data))
 
 # req_data = """
 # GET /wildthings HTTP/1.1

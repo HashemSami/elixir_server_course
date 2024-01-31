@@ -1,9 +1,9 @@
 defmodule Survey.Client do
-  def start(port) do
+  def send(req_data, port) do
     port
     |> connect_to_server()
-    |> send_request
-    |> receive_req
+    |> send_request(req_data)
+    |> receive_res
   end
 
   def connect_to_server(port) do
@@ -16,22 +16,15 @@ defmodule Survey.Client do
     server_socket
   end
 
-  def send_request(server_socket) do
-    req_data = """
-    GET /faq HTTP/1.1\r
-    Host: example.com\r
-    User-Agent: ExampleBrowser/1.0\r
-    Accept: */*\r
-    \r\n\r
-    """
-
+  def send_request(server_socket, req_data) do
     :gen_tcp.send(server_socket, req_data)
+    server_socket
   end
 
-  def receive_req(server_socket) do
-    {:ok, request} = :gen_tcp.recv(server_socket, 0)
+  def receive_res(server_socket) do
+    {:ok, res} = :gen_tcp.recv(server_socket, 0)
 
-    IO.puts(request)
     :gen_tcp.close(server_socket)
+    res
   end
 end
