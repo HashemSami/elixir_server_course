@@ -1,6 +1,4 @@
 defmodule Survey.Fetcher do
-  alias Survey.VideoCam
-
   def async(fun) do
     # assigning the current precess pid to the parent variable
     # which is the request handling process
@@ -20,6 +18,9 @@ defmodule Survey.Fetcher do
       # value in the function argument
       # not bind it to a new value
       {^pid, :result, value} -> value
+    after
+      2000 ->
+        raise "Timed out!"
     end
   end
 end

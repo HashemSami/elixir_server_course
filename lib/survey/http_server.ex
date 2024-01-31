@@ -27,8 +27,15 @@ defmodule Survey.HttpServer do
   def start(port) when is_integer(port) and port > 1023 do
     # Creates a socket to listen for client connections
     # 'listen_socket' is bound to the listening socket
-    {:ok, listen_socket} =
-      :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true])
+    case :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true]) do
+      {:ok, listen_socket} ->
+        IO.puts("\n Listening for the connection request on port #{port}...\n")
+
+        accept_loop(listen_socket)
+
+      {:error, reason} ->
+        raise reason
+    end
 
     # :gen_tcp.close(listen_socket)
 
@@ -37,10 +44,6 @@ defmodule Survey.HttpServer do
     # 'packet: :raw' - deliver the entire binary without doing any packet handling
     # 'active: false' - receive data when we're ready by calling ':gen_tcp.recv/2'
     # 'reuseaddr: true' - allows reusing the address if the listener crashes
-
-    IO.puts("\n Listening for the connection request on port #{port}...\n")
-
-    accept_loop(listen_socket)
   end
 
   @doc """
@@ -88,7 +91,10 @@ defmodule Survey.HttpServer do
     {:ok, request} = :gen_tcp.recv(client_socket, 0)
 
     IO.puts("Received request:\n")
-    IO.puts(request)
+
+    if Mix.env() == :dev do
+      IO.inspect(request)
+    end
 
     request
   end
@@ -113,7 +119,10 @@ defmodule Survey.HttpServer do
     :ok = :gen_tcp.send(client_socket, response)
 
     IO.puts("Sent response: \n")
-    IO.puts(response)
+
+    if Mix.env() == :dev do
+      IO.inspect(response)
+    end
 
     # Closes the client socket, ending the connection
     :gen_tcp.close(client_socket)

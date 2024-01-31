@@ -1,0 +1,7 @@
+<h1>New Snapshots</h1>
+
+<ul>
+  <%= for s <- snapshots do %>
+    <li><%=s %></li>
+  <% end %>
+</ul>
