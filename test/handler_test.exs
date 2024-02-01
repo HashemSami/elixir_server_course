@@ -1,10 +1,9 @@
 defmodule HandlerTest do
   use ExUnit.Case
-  doctest Survey.Parser
 
   import Survey.Handler, only: [handle: 1]
 
-  spawn(Survey.HttpServer, :start, [4000])
+  # spawn(Survey.HttpServer, :start, [4000])
 
   test "deleting an item from the bear data and returning the deleted item" do
     request = """

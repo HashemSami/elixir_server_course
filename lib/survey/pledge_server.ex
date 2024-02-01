@@ -2,6 +2,7 @@ defmodule Survey.PledgeServer do
   @process_name :pledge_server
 
   # CLIENT INTERFACE
+
   def start(initial_state \\ []) do
     IO.puts("Starting the pledge server..")
     # spawn(Survey.PledgeServer, :listen_loop, [[]])
@@ -18,7 +19,9 @@ defmodule Survey.PledgeServer do
   def recent_pledges() do
     # return the most recent pledges (cache)
     # requesting the server to send the state to
-    # the current process mailbox
+    # the current process mailbox.
+    # !! self() here will be the id to which service made
+    # this function call
     send(@process_name, {self(), :recent_pledges})
 
     # collecting the data from the mailbox
@@ -76,6 +79,8 @@ defmodule Survey.PledgeServer do
         send(sender, {:response, total})
         listen_loop(cache_state)
 
+      # this will flush the data from the message box
+      # if there is no match with the above code
       unexpected ->
         IO.puts("Unexpected messaged: #{inspect(unexpected)}")
         listen_loop(cache_state)

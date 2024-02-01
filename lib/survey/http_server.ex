@@ -84,8 +84,6 @@ defmodule Survey.HttpServer do
   @doc """
   Receives a request on the 'client_socket'.
   """
-  @type client_socket :: integer | float
-  @spec read_request(client_socket) :: String.t()
   def read_request(client_socket) do
     # return all bytes using 0
     {:ok, request} = :gen_tcp.recv(client_socket, 0)
