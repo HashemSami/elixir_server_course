@@ -6,6 +6,7 @@ defmodule Survey.Handler do
   alias Survey.BearController
   alias Survey.VideoCam
   alias Survey.SnapshotsView
+  alias Survey.PledgeController
 
   import Survey.Plugins, only: [rewrite_path: 1, track: 1, log: 1]
   import Survey.FileHandler, only: [serve_page: 2, serve_md_page: 2]
@@ -25,6 +26,16 @@ defmodule Survey.Handler do
   def put_content_length(%ReqData{resp_headers: resp_headers, resp_body: resp_body} = req_data) do
     resp_headers = Map.put(resp_headers, "Content-Length", String.length(resp_body))
     %{req_data | resp_headers: resp_headers}
+  end
+
+  # ======================
+
+  def route(%ReqData{method: "POST", path: "/pledges"} = req_data) do
+    PledgeController.create(req_data, req_data.params)
+  end
+
+  def route(%ReqData{method: "GET", path: "/pledges"} = req_data) do
+    PledgeController.index(req_data)
   end
 
   # ======================
