@@ -48,6 +48,11 @@ defmodule Survey.PledgeServer do
     []
   end
 
+  def handle_info(message, state) do
+    IO.puts("wrong message key!!: #{inspect(message)}")
+    state
+  end
+
   def send_pledge_to_service(_name, _amount) do
     # CODE GOES HERE TO SEND A PROPER DATA TO SERVER
     {:ok, "pledge-#{:rand.uniform(1000)}"}
@@ -67,7 +72,7 @@ end
 # IO.inspect(PledgeServer.create_pledges("Hash2", 400))
 # IO.inspect(PledgeServer.create_pledges("Hash3", 500))
 # IO.inspect(PledgeServer.create_pledges("Hash4", 600))
-# PledgeServer.clear()
+# # PledgeServer.clear()
 # IO.inspect(PledgeServer.create_pledges("Hash5", 700))
 
 # IO.inspect(PledgeServer.recent_pledges())

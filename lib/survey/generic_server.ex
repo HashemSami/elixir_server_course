@@ -37,8 +37,9 @@ defmodule Survey.GenericServer do
       # this will flush the data from the message box
       # if there is no match with the above code
       unexpected ->
-        IO.puts("Unexpected messaged: #{inspect(unexpected)}")
-        listen_loop(state, callback_module)
+        new_state = callback_module.handle_info(unexpected, state)
+        # IO.puts("Unexpected messaged: #{inspect(unexpected)}")
+        listen_loop(new_state, callback_module)
     end
   end
 end
