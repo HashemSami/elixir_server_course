@@ -1,32 +1,43 @@
 defmodule Survey.FourOhFourCounter do
-  @counter_server :serv
-  def start() do
-    {:ok, agent} = Agent.start(fn -> %{} end)
+  alias Survey.GenericServer
 
-    Process.register(agent, @counter_server)
-    @counter_server
+  @counter_server __MODULE__
+  def start() do
+    GenericServer.start(__MODULE__, @counter_server, %{})
   end
 
   def bump_count(path) do
-    Agent.update(@counter_server, fn state -> Map.update(state, path, 1, &(&1 + 1)) end)
+    GenericServer.call(@counter_server, {:bump_count, path})
   end
 
-  # ======================================
-  # defp update_state(state, path) when not is_map_key(state, path) do
-  #   Map.put(state, path, 1)
-  # end
-
-  # defp update_state(state, path) do
-  #   %{state | path => state[path] + 1}
-  # end
-
-  # ======================================
-
   def get_count(path) do
-    Agent.get(@counter_server, fn state -> state[path] end)
+    GenericServer.call(@counter_server, {:get_count, path})
   end
 
   def get_counts() do
-    Agent.get(@counter_server, fn state -> state end)
+    GenericServer.call(@counter_server, :get_counts)
+  end
+
+  def reset_counter() do
+    GenericServer.cast(@counter_server, :reset)
+  end
+
+  # SERVER CALLBACKS
+  def handle_call({:bump_count, path}, state) do
+    updated_state = Map.update(state, path, 1, &(&1 + 1))
+    {:ok, updated_state}
+  end
+
+  def handle_call({:get_count, path}, state) do
+    count = Map.get(state, path, 0)
+    {count, state}
+  end
+
+  def handle_call(:get_counts, state) do
+    {state, state}
+  end
+
+  def handle_cast(:reset, _state) do
+    %{}
   end
 end

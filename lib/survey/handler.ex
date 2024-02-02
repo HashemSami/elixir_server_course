@@ -8,7 +8,7 @@ defmodule Survey.Handler do
   alias Survey.SnapshotsView
   alias Survey.PledgeController
 
-  import Survey.Plugins, only: [rewrite_path: 1, track: 1, log: 1]
+  import Survey.Plugins, only: [rewrite_path: 1, track: 1, log: 1, get_404_counts: 0]
   import Survey.FileHandler, only: [serve_page: 2, serve_md_page: 2]
   import Survey.Parser
 
@@ -39,6 +39,9 @@ defmodule Survey.Handler do
   end
 
   # ======================
+  def route(%ReqData{method: "GET", path: "/404s"} = req_data) do
+    %{req_data | status: 200, resp_body: "#{inspect(get_404_counts())}"}
+  end
 
   def route(%ReqData{method: "GET", path: "/snapshots"} = req_data) do
     snapshots =
