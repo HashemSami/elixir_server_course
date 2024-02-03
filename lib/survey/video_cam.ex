@@ -12,6 +12,6 @@ defmodule Survey.VideoCam do
     :timer.sleep(1000)
 
     # Example respond returned from the API
-    "#{camera_name}-snapshot.jpg"
+    "#{camera_name}-snapshot-#{:rand.uniform(1000)}.jpg"
   end
 end

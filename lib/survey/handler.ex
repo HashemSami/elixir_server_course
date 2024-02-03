@@ -44,15 +44,10 @@ defmodule Survey.Handler do
   end
 
   def route(%ReqData{method: "GET", path: "/snapshots"} = req_data) do
-    snapshots =
-      ["cam-1", "cam-2", "cam-3"]
-      # this will return 3 pids after running all processes
-      |> Enum.map(&Task.async(fn -> VideoCam.get_snapshot(&1) end))
-      # then will receive the messages through this pipe
-      # the Task has a default timeout of 5 second then it will raise an error
-      |> Enum.map(&Task.await/1)
+    sensor_data = Survey.SensorServer.get_sensor_data()
 
-    %{req_data | status: 200, resp_body: SnapshotsView.index(snapshots)}
+    # %{req_data | status: 200, resp_body: SnapshotsView.index(sensor_data.snapshots)}
+    %{req_data | status: 200, resp_body: inspect(sensor_data)}
   end
 
   def route(%ReqData{method: "GET", path: "/kaboom"}) do

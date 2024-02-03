@@ -104,10 +104,10 @@ defmodule Survey.PledgeServerGen do
 end
 
 # # # run the local state server
-alias Survey.PledgeServerGen
-{:ok, pid} = PledgeServerGen.start()
+# alias Survey.PledgeServerGen
+# {:ok, pid} = PledgeServerGen.start()
 # send(pid, {:stop, "hammer"})
-PledgeServerGen.set_cache_size(4)
+# PledgeServerGen.set_cache_size(4)
 # # adding data to the server
 # alias Survey.PledgeServerGen
 # IO.inspect(PledgeServerGen.create_pledges("Hash", 100))
@@ -118,7 +118,7 @@ PledgeServerGen.set_cache_size(4)
 # # PledgeServerGen.clear()
 # IO.inspect(PledgeServerGen.create_pledges("Hash5", 700))
 
-IO.inspect(PledgeServerGen.recent_pledges())
+# IO.inspect(PledgeServerGen.recent_pledges())
 # IO.inspect(PledgeServerGen.total_pledged())
 
 # :sys.get_state(pid)
