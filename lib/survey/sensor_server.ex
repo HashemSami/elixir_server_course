@@ -78,6 +78,8 @@ defmodule Survey.SensorServer do
     snapshots =
       ["cam-1", "cam-2", "cam-3"]
       # this will return 3 pids after running all processes
+      # note that if the Task generated an error, the hole server will
+      # crash
       |> Enum.map(&Task.async(fn -> Survey.VideoCam.get_snapshot(&1) end))
       # then will receive the messages through this pipe
       # the Task has a default timeout of 5 second then it will raise an error
