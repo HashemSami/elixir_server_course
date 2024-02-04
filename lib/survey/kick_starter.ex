@@ -1,12 +1,10 @@
 defmodule Survey.KickStarter do
   use GenServer
 
-  @port 4000
-
-  def start do
+  def start_link do
     IO.puts("Starting the kickstarter...")
 
-    GenServer.start(__MODULE__, :ok, name: __MODULE__)
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   # CLIENT INTERFACE
@@ -24,14 +22,14 @@ defmodule Survey.KickStarter do
     # process, ans will not terminate the other linked precesses
     Process.flag(:trap_exit, true)
 
-    server_pid = start_server(@port)
+    server_pid = start_server()
     # this will be stored on the GenServer state
     {:ok, server_pid}
   end
 
   def handle_info({:EXIT, _pid, reason}, _state) do
     IO.puts("HTTP server exited #{inspect(reason)}")
-    server_pid = start_server(@port)
+    server_pid = start_server()
     {:noreply, server_pid}
   end
 
@@ -39,13 +37,24 @@ defmodule Survey.KickStarter do
     {:reply, state, state}
   end
 
-  defp start_server(port) do
+  defp start_server() do
     IO.puts("Starting the HTTP server...")
+    port = Application.get_env(:survey, :port)
     server_pid = spawn_link(Survey.HttpServer, :start, [port])
     # this will create a bidirectional links between the
     # http and the gen server
     # Process.link(server_pid)
     Process.register(server_pid, :http_server)
     server_pid
+  end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
   end
 end

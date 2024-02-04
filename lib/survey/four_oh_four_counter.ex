@@ -3,10 +3,10 @@ defmodule Survey.FourOhFourCounter do
 
   @counter_server __MODULE__
 
-  def start() do
+  def start_link() do
     IO.puts("Starting the Four Oh Four Counter server..")
 
-    GenServer.start(__MODULE__, %{}, name: @counter_server)
+    GenServer.start_link(__MODULE__, %{}, name: @counter_server)
   end
 
   def bump_count(path) do
@@ -47,5 +47,15 @@ defmodule Survey.FourOhFourCounter do
 
   def handle_cast(:reset, _state) do
     {:noreply, %{}}
+  end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
   end
 end

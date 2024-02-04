@@ -14,7 +14,9 @@ defmodule Survey.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :eex, :observer, :wx, :runtime_tools]
+      extra_applications: [:logger, :eex, :observer, :wx, :runtime_tools],
+      mod: {Survey, []},
+      env: [port: 3000]
     ]
   end
 

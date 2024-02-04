@@ -4,8 +4,6 @@ defmodule Survey.Handler do
   """
   alias Survey.ReqData
   alias Survey.BearController
-  alias Survey.VideoCam
-  alias Survey.SnapshotsView
   alias Survey.PledgeController
 
   import Survey.Plugins, only: [rewrite_path: 1, track: 1, log: 1, get_404_counts: 0]

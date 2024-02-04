@@ -3,17 +3,12 @@ defmodule Survey do
   Documentation for `Survey`.
   """
 
-  @doc """
-  Hello world.
+  use Application
 
-  ## Examples
+  def start(_start_type, _start_args) do
+    IO.puts("Starting the application...")
 
-      iex> Survey.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    Survey.Supervisor.start_link()
   end
 
   def sum([head | tail], tot) do

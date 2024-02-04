@@ -1,5 +1,5 @@
 defmodule Survey.PledgeServerGen do
-  @process_name __MODULE__
+  @process_name :pledge_server
 
   # GenServer requires the use of all the six handlers to be
   # implemented.
@@ -15,9 +15,9 @@ defmodule Survey.PledgeServerGen do
     defstruct cache_size: 3, pledges: []
   end
 
-  def start() do
+  def start_link() do
     IO.puts("Starting the pledge server..")
-    GenServer.start(__MODULE__, %State{}, name: @process_name)
+    GenServer.start_link(__MODULE__, %State{}, name: @process_name)
   end
 
   def recent_pledges() do
@@ -100,6 +100,16 @@ defmodule Survey.PledgeServerGen do
       {"Sara", 988},
       {"Sara", 988}
     ]
+  end
+
+  def child_spec(_opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
   end
 end
 

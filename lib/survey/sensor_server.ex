@@ -1,5 +1,5 @@
 defmodule Survey.SensorServer do
-  @name __MODULE__
+  @name :sensor_server
   # :timer.minutes(60)
   # @refresh_interval :timer.seconds(5)
 
@@ -12,8 +12,8 @@ defmodule Survey.SensorServer do
 
   # CLIENT INTERFACE
 
-  def start do
-    GenServer.start(__MODULE__, %State{}, name: @name)
+  def start_link(interval) do
+    GenServer.start_link(__MODULE__, %State{refresh_interval: interval}, name: @name)
   end
 
   def get_sensor_data do
@@ -88,5 +88,15 @@ defmodule Survey.SensorServer do
     bigfoot_location = Task.await(task)
 
     %{snapshots: snapshots, location: bigfoot_location}
+  end
+
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
   end
 end

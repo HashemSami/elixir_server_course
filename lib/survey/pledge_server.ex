@@ -57,6 +57,16 @@ defmodule Survey.PledgeServer do
     # CODE GOES HERE TO SEND A PROPER DATA TO SERVER
     {:ok, "pledge-#{:rand.uniform(1000)}"}
   end
+
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
+  end
 end
 
 # # # run the local state server
